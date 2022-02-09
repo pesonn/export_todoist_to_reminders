@@ -1,0 +1,15 @@
+{
+  "name": "export_todoist_to_reminders",
+  "version": "1.0.0",
+  "main": "todoist.js",
+  "repository": "https://github.com/pesonn/export_todoist_to_reminders.git",
+  "author": "pesonn <43933988+pesonn@users.noreply.github.com>",
+  "license": "MIT",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "dotenv": "^16.0.0",
+    "node-fetch": "^3.2.0",
+    "run-jxa": "^3.0.0"
+  }
+}
