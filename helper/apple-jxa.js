@@ -12,8 +12,8 @@ export async function displayMessage(message) {
   );
 }
 
-export async function selectedRemindersAccount() {
-  await runJxaSync(() => {
+export function selectedRemindersAccount() {
+  return runJxaSync(() => {
     const Reminder = Application("Reminders");
     Reminder.includeStandardAdditions = true;
 
@@ -35,7 +35,7 @@ export async function selectedRemindersAccount() {
         return;
       }
 
-      return Reminder.defaultAccount();
+      return Reminder.defaultAccount.name();
     }
 
     const selectedAccount = Reminder.chooseFromList(availableAccountNames, {
@@ -53,7 +53,8 @@ export async function selectedRemindersAccount() {
       return;
     }
 
-    return selectedAccount;
+    // chooseFromList returns array of selected answers. But we only need one, so we use the first index!
+    return selectedAccount[0];
   }, []);
 }
 
@@ -64,32 +65,34 @@ export async function createRemindersList(listdata, accountName) {
       Reminder.includeStandardAdditions = true;
 
       const newList = Reminder.List(insertListdata);
-      insertAccountName.lists.push(newList);
+      Reminder.accounts[insertAccountName].lists.push(newList);
     },
     [listdata, accountName],
   );
 }
 
-export async function createNewReminder(reminderdata, listname) {
+export async function createNewReminder(reminderdata, accountName, listname) {
   await runJxa(
-    (insertReminderdata, insertListname) => {
+    (insertReminderdata, insertAccountName, insertListname) => {
       const Reminder = Application("Reminders");
       Reminder.includeStandardAdditions = true;
 
-      if (!insertListname) {
-        insertListname = Reminder.defaultList;
+      if (typeof insertListname === "undefined") {
+        insertListname = Reminder.defaultList.name();
       }
 
       const newReminder = Reminder.Reminder(insertReminderdata);
 
       try {
-        reminderAccount.lists[insertListname].reminders.push(newReminder);
+        Reminder.accounts[insertAccountName].lists[
+          insertListname
+        ].reminders.push(newReminder);
       } catch (error) {
         console.log(error);
         Reminder.displayAlert(error.message);
       }
     },
-    [reminderdata, listname],
+    [reminderdata, accountName, listname],
   );
 }
 
