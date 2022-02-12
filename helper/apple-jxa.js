@@ -59,7 +59,7 @@ export function selectedRemindersAccount() {
 }
 
 export async function createRemindersList(listdata, accountName) {
-  await runJxa(
+  return await runJxa(
     (insertListdata, insertAccountName) => {
       const Reminder = Application("Reminders");
       Reminder.includeStandardAdditions = true;
@@ -72,7 +72,7 @@ export async function createRemindersList(listdata, accountName) {
 }
 
 export async function createNewReminder(reminderdata, accountName, listname) {
-  await runJxa(
+  return await runJxa(
     (insertReminderdata, insertAccountName, insertListname) => {
       const Reminder = Application("Reminders");
       Reminder.includeStandardAdditions = true;
