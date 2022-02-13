@@ -65,7 +65,13 @@ export async function createRemindersList(listdata, accountName) {
       Reminder.includeStandardAdditions = true;
 
       const newList = Reminder.List(insertListdata);
-      Reminder.accounts[insertAccountName].lists.push(newList);
+      try {
+        Reminder.accounts[insertAccountName].lists.push(newList);
+        console.log(`Projekt ${insertListdata.name} übertragen`);
+      } catch (error) {
+        console.log(error);
+        console.log(`Fehler bei Projekt ${insertListdata.name}`);
+      }
     },
     [listdata, accountName],
   );
@@ -87,9 +93,10 @@ export async function createNewReminder(reminderdata, accountName, listname) {
         Reminder.accounts[insertAccountName].lists[
           insertListname
         ].reminders.push(newReminder);
+        console.log(`Task ${insertReminderdata.name} übertragen`);
       } catch (error) {
         console.log(error);
-        Reminder.displayAlert(error.message);
+        console.log(`Fehle bei Task ${insertReminderdata.name}`);
       }
     },
     [reminderdata, accountName, listname],
