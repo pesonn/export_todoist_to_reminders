@@ -67,10 +67,10 @@ export function createRemindersList(listdata, accountName) {
       const newList = Reminder.List(insertListdata);
       try {
         Reminder.accounts[insertAccountName].lists.push(newList);
-        console.log(`Projekt ${insertListdata.name} übertragen`);
+        console.log(`Project ${insertListdata.name} synced`);
       } catch (error) {
         console.log(error);
-        console.log(`Fehler bei Projekt ${insertListdata.name}`);
+        console.log(`Error at Project ${insertListdata.name}`);
       }
     },
     [listdata, accountName],
@@ -93,10 +93,10 @@ export function createNewReminder(reminderdata, accountName, listname) {
         Reminder.accounts[insertAccountName].lists[
           insertListname
         ].reminders.push(newReminder);
-        console.log(`Task ${insertReminderdata.name} übertragen`);
+        console.log(`Task ${insertReminderdata.name} synced`);
       } catch (error) {
+        console.log(`Error with Task ${insertReminderdata.name}`);
         console.log(error);
-        console.log(`Fehler bei Task ${insertReminderdata.name}`);
       }
     },
     [reminderdata, accountName, listname],

@@ -42,38 +42,43 @@ async function createRemindersListForProjects() {
   }
 }
 
-function createReminderForEachList(projects) {
-  console.log("Beginne Tasks zu übertragen...");
-  projects.forEach((project, index) => {
-    try {
-      getTodoistData({
-        typeOrURL: "tasksfromproject",
-        api_token: api_token,
-        projectID: project.id,
-      }).then((tasks) =>
-        tasks.forEach((task, index) => {
-          let taskDatetime =
-            typeof task.due !== "undefined"
-              ? new Date(task.due.datetime)
-              : null;
+async function createReminderForEachList(projects) {
+  console.log("Start syncing Tasks...");
+  await Promise.all(
+    projects.forEach(async (project, index) => {
+      try {
+        const res = await getTodoistData({
+          typeOrURL: "tasksfromproject",
+          api_token: api_token,
+          projectID: project.id,
+        });
 
-          return createNewReminder(
-            {
-              name: task.content,
-              body: task.description,
-              completed: task.completed,
-              dueDate: taskDatetime,
-              priority: translateTodoistPrioritiesToReminderPrio(task.priority),
-            },
-            remindersAccountName,
-            project.name,
-          );
-        }),
-      );
-    } catch (error) {
-      return console.log(error.message);
-    }
-  });
+        (await res.length) > 0 &&
+          res.forEach((task, index) => {
+            let taskDatetime =
+              typeof task.due !== "undefined"
+                ? new Date(task.due.datetime)
+                : null;
+
+            return createNewReminder(
+              {
+                name: task.content,
+                body: task.description,
+                completed: task.completed,
+                dueDate: taskDatetime,
+                priority: translateTodoistPrioritiesToReminderPrio(
+                  task.priority,
+                ),
+              },
+              remindersAccountName,
+              project.name,
+            );
+          });
+      } catch (error) {
+        return console.log(error.message);
+      }
+    }),
+  );
 
   return displayMessage("Alle Tasks wurden übertragen!");
 }
