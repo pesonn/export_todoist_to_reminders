@@ -1,7 +1,7 @@
 import { runJxa, runJxaSync } from "run-jxa";
 
-export async function displayMessage(message) {
-  return await runJxa(
+export function displayMessage(message) {
+  return runJxaSync(
     (insertMessage) => {
       const app = Application.currentApplication();
       app.includeStandardAdditions = true;
@@ -58,8 +58,8 @@ export function selectedRemindersAccount() {
   }, []);
 }
 
-export async function createRemindersList(listdata, accountName) {
-  return await runJxa(
+export function createRemindersList(listdata, accountName) {
+  return runJxaSync(
     (insertListdata, insertAccountName) => {
       const Reminder = Application("Reminders");
       Reminder.includeStandardAdditions = true;
@@ -77,8 +77,8 @@ export async function createRemindersList(listdata, accountName) {
   );
 }
 
-export async function createNewReminder(reminderdata, accountName, listname) {
-  return await runJxa(
+export function createNewReminder(reminderdata, accountName, listname) {
+  return runJxaSync(
     (insertReminderdata, insertAccountName, insertListname) => {
       const Reminder = Application("Reminders");
       Reminder.includeStandardAdditions = true;
@@ -96,7 +96,7 @@ export async function createNewReminder(reminderdata, accountName, listname) {
         console.log(`Task ${insertReminderdata.name} übertragen`);
       } catch (error) {
         console.log(error);
-        console.log(`Fehle bei Task ${insertReminderdata.name}`);
+        console.log(`Fehler bei Task ${insertReminderdata.name}`);
       }
     },
     [reminderdata, accountName, listname],
